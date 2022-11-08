@@ -8,18 +8,86 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
     const root = document.querySelector("#root");
-    function Container() {
-      const [counter, setCounter] = React.useState(0);
-      const onClick = () => {
-        setCounter(counter + 1);
+    function MinutesToHours() {
+      const [amount, setAmount] = React.useState();
+      const [inverted, setInverted] = React.useState(false);
+      const onChange = (even) => {
+        setAmount(even.target.value);
       };
-      console.log("rendered");
-      console.log(counter);
-
+      const onClickInverted = () => {
+        onClickReset();
+        setInverted((current) => !current);
+      };
+      const onClickReset = () => setAmount();
       return (
         <div>
-          <h3>Total clicks: {counter}</h3>
-          <button onClick={onClick}>Click me</button>
+          <h3>minutes to hours</h3>
+          <div>
+            <lable for="minutes">Minutes</lable>
+            <input
+              value={inverted ? amount * 60 : amount}
+              disabled={inverted}
+              id="minutes"
+              placeholder="Minutes"
+              type="number"
+              onChange={onChange}
+            />
+          </div>
+          <h4>
+            You want to convert {amount} {inverted ? "hours" : "minutes"}
+          </h4>
+          <div>
+            <lable for="hours">Hours</lable>
+            <input
+              value={inverted ? amount : Math.round(amount / 60)}
+              id="hours"
+              placeholder="Hours"
+              type="number"
+              disabled={!inverted}
+              onChange={onChange}
+            />
+          </div>
+          <button onClick={onClickReset}>Reset</button>
+          <button onClick={onClickInverted}>
+            {inverted ? `Turn back` : `Invert`}
+          </button>
+        </div>
+      );
+    }
+    function KmToMiles() {
+      return (
+        <div>
+          <h3>km to miles</h3>
+          <div>
+            <lable htmlFor="killom">kilometers</lable>
+            <input id="km" placeholder="km"></input>
+          </div>
+          <div>
+            <lable htmlFor="miles">miles</lable>
+            <input id="miles" placeholder="miles"></input>
+          </div>
+          <button>Reset</button>
+          <button>Invert</button>
+        </div>
+      );
+    }
+    function Container() {
+      const [index, setIndex] = React.useState("x");
+      const onSelect = (event) => {
+        setIndex(event.target.value);
+      };
+      return (
+        <div>
+          <h1>Super converter</h1>
+          <hr />
+          <select value={index} onChange={onSelect}>
+            <option value="x">Select your units</option>
+            <option value="0">Minutes & Hours</option>
+            <option value="1">Kilometers & Miles</option>
+          </select>
+          <hr />
+          {index === "0" ? <MinutesToHours /> : null}
+          {index === "1" ? <KmToMiles /> : null}
         </div>
       );
     }

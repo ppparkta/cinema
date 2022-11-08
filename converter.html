@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html>
+  <link rel="stylesheet" href="converter.css"></style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;800&display=swap" rel="stylesheet">
   <body>
     <div id="root"></div>
   </body>
@@ -14,11 +20,13 @@
       const onChange = (even) => {
         setAmount(even.target.value);
       };
+      function onClickReset() {
+        setAmount(0);
+      };
       const onClickInverted = () => {
         onClickReset();
         setInverted((current) => !current);
       };
-      const onClickReset = () => setAmount();
       return (
         <div>
           <h3>minutes to hours</h3>
@@ -33,9 +41,6 @@
               onChange={onChange}
             />
           </div>
-          <h4>
-            You want to convert {amount} {inverted ? "hours" : "minutes"}
-          </h4>
           <div>
             <lable for="hours">Hours</lable>
             <input
@@ -55,19 +60,47 @@
       );
     }
     function KmToMiles() {
+      const [filter2, setFilter2] = React.useState(false);
+      const [kilo, setKilo] = React.useState();
+      const onChange = (event) => {
+        setKilo(event.target.value);
+      };
+      function onReset(){
+        setKilo(0);
+      };
+      function onClickInvert() {
+        onReset();
+        setFilter2((current) => !current);
+      }
       return (
         <div>
           <h3>km to miles</h3>
           <div>
             <lable htmlFor="killom">kilometers</lable>
-            <input id="km" placeholder="km"></input>
+            <input
+              id="km"
+              placeholder="km"
+              type="number"
+              value={filter2 ? kilo / 0.6214 : kilo}
+              onChange={onChange}
+              disabled={filter2}
+            ></input>
           </div>
           <div>
             <lable htmlFor="miles">miles</lable>
-            <input id="miles" placeholder="miles"></input>
+            <input
+              id="miles"
+              placeholder="miles"
+              type="number"
+              value={filter2 ? kilo : kilo * 0.6214}
+              onChange={onChange}
+              disabled={!filter2}
+            ></input>
           </div>
-          <button>Reset</button>
-          <button>Invert</button>
+          <button onClick={onReset}>Reset</button>
+          <button onClick={onClickInvert}>
+            {filter2 ? `Turn back` : `Invert`}
+          </button>
         </div>
       );
     }
@@ -79,13 +112,11 @@
       return (
         <div>
           <h1>Super converter</h1>
-          <hr />
-          <select value={index} onChange={onSelect}>
+          <select className="select" value={index} onChange={onSelect}>
             <option value="x">Select your units</option>
             <option value="0">Minutes & Hours</option>
             <option value="1">Kilometers & Miles</option>
           </select>
-          <hr />
           {index === "0" ? <MinutesToHours /> : null}
           {index === "1" ? <KmToMiles /> : null}
         </div>
