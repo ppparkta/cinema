@@ -1,24 +1,42 @@
-import { useState, useEffect } from "react";
-
-function Hello() {
-  useEffect(function () {
-    console.log("hi");
-    return function () {
-      console.log("bye");
-    };
-  }, []);
-  return <h1>Hello</h1>;
-}
+import { useState } from "react";
+import Coin_tracker from "./Coin_tracker";
+import Movie from "./Movie";
 
 function App() {
-  const [showing, setShowing] = useState(false);
-  const onClick = () => {
-    setShowing((current) => !current);
+  const [toDo, setTodo] = useState("");
+  const [toDos, setTodos] = useState([]);
+  const onChange = (event) => setTodo(event.target.value);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (toDo === "") return;
+    setTodos((current) => [...current, toDo]);
+    setTodo("");
   };
+  const onClick = (index) => {
+    setTodos(toDos.filter((item, todosIndex) => index !== todosIndex));
+  };
+  console.log(toDos);
   return (
     <div>
-      {showing ? <Hello /> : null}
-      <button onClick={onClick}>{showing ? "hide" : "show"}</button>
+      <h1>My To Dos ({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input
+          value={toDo}
+          onChange={onChange}
+          type="text"
+          placeholder="write your to do..."
+        />
+        <button>Add To Do</button>
+      </form>
+      <hr />
+      {toDos.map((item, index) => (
+        <li key={index}>
+          {item} <button onClick={() => onClick(index)}>Delete</button>
+        </li>
+      ))}
+      <Coin_tracker />
+      <hr />
+      <Movie />
     </div>
   );
 }
